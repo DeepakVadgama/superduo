@@ -92,6 +92,25 @@
             android:layout_alignStart="@+id/bookCover"
             android:layout_marginTop="10dp"/>
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleInverse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/notFound"
+            android:textSize="@dimen/abc_text_size_large_material"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/not_found_msg"
+            android:layout_centerVertical="true"
+            android:visibility="gone"/>
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
