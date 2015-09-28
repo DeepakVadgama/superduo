@@ -119,8 +119,8 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     private void fetchBook(String ean) {
 
         clearFields();
-        View viewById = getActivity().findViewById(R.id.progressBar);
-        viewById.setVisibility(View.VISIBLE);
+        View progessBar = getActivity().findViewById(R.id.progressBar);
+        progessBar.setVisibility(View.VISIBLE);
 
         if (Utility.isConnectedToInternet(getActivity())) {
             Intent bookIntent = new Intent(getActivity(), BookService.class);

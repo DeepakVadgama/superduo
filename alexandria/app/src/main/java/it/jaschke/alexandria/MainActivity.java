@@ -39,6 +39,12 @@ public class MainActivity
     public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
     public static final String MESSAGE_KEY = "MESSAGE_EXTRA";
 
+    public static final int LIST_BOOK_FRAGMENT = 0;
+    public static final int ADD_BOOK_FRAGMENT = 1;
+    public static final int ABOUT_FRAGMENT = 2;
+    public static final int BOOK_DETAIL_FRAGMENT = 3;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +66,22 @@ public class MainActivity
         // Set up the drawer.
         navigationDrawerFragment.setUp(R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+
+        // Fixed: When orientation is portrait and book detail is shown
+        // on orientation change, book detail is shown on both left and right containers
+        if (mIsTablet) {
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
+            if (fragment != null
+                    && String.valueOf(BOOK_DETAIL_FRAGMENT).equals(fragment.getTag())) {
+
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.container, new ListOfBooks(), String.valueOf(BOOK_DETAIL_FRAGMENT))
+                        .commit();
+            }
+
+        }
     }
 
     @Override
@@ -70,20 +92,19 @@ public class MainActivity
 
         switch (position) {
             default:
-            case 0:
+            case LIST_BOOK_FRAGMENT:
                 nextFragment = new ListOfBooks();
                 break;
-            case 1:
+            case ADD_BOOK_FRAGMENT:
                 nextFragment = new AddBook();
                 break;
-            case 2:
+            case ABOUT_FRAGMENT:
                 nextFragment = new About();
                 break;
-
         }
 
         fragmentManager.beginTransaction()
-                .replace(R.id.container, nextFragment)
+                .replace(R.id.container, nextFragment, String.valueOf(position))
                 .addToBackStack((String) title)
                 .commit();
     }
@@ -147,10 +168,9 @@ public class MainActivity
             id = R.id.right_container;
         }
         getSupportFragmentManager().beginTransaction()
-                .replace(id, fragment)
-                .addToBackStack("Book Detail")
+                .replace(id, fragment, String.valueOf(BOOK_DETAIL_FRAGMENT))
                 .commit();
-
+//                .addToBackStack("Book Detail")
     }
 
     private class MessageReciever extends BroadcastReceiver {
