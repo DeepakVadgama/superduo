@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import it.jaschke.alexandria.data.AlexandriaContract;
+import it.jaschke.alexandria.scanner.SimpleScannerActivity;
 import it.jaschke.alexandria.services.BookService;
 
 public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -82,8 +83,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         holder.scan_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                startActivityForResult(new Intent(getActivity(), SimpleScannerActivity.class), SCAN_REQUEST_CODE);
-                eanView.setText("9780857714787");
+                startActivityForResult(new Intent(getActivity(), SimpleScannerActivity.class), SCAN_REQUEST_CODE);
             }
         });
 
@@ -120,7 +120,9 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 
         clearFields();
         View progessBar = getActivity().findViewById(R.id.progressBar);
-        progessBar.setVisibility(View.VISIBLE);
+        if (progessBar != null) {
+            progessBar.setVisibility(View.VISIBLE);
+        }
 
         if (Utility.isConnectedToInternet(getActivity())) {
             Intent bookIntent = new Intent(getActivity(), BookService.class);

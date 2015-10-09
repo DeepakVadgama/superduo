@@ -169,8 +169,8 @@ public class MainActivity
         }
         getSupportFragmentManager().beginTransaction()
                 .replace(id, fragment, String.valueOf(BOOK_DETAIL_FRAGMENT))
+                .addToBackStack(getString(R.string.books))
                 .commit();
-//                .addToBackStack("Book Detail")
     }
 
     private class MessageReciever extends BroadcastReceiver {
