@@ -1,95 +1,134 @@
 package barqsoft.footballscores;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.text.format.Time;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
-/**
- * Created by yehya khaled on 2/27/2015.
- */
-public class PagerFragment extends Fragment
-{
+public class PagerFragment extends Fragment {
+
     public static final int NUM_PAGES = 5;
-    public ViewPager mPagerHandler;
-    private myPageAdapter mPagerAdapter;
+    public ViewPager mViewPager;
+    private MyPageAdapter mPagerAdapter;
     private MainScreenFragment[] viewFragments = new MainScreenFragment[5];
+
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.pager_fragment, container, false);
-        mPagerHandler = (ViewPager) rootView.findViewById(R.id.pager);
-        mPagerAdapter = new myPageAdapter(getChildFragmentManager());
-        for (int i = 0;i < NUM_PAGES;i++)
-        {
-            Date fragmentdate = new Date(System.currentTimeMillis()+((i-2)*86400000));
-            SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
+        mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
+        mPagerAdapter = new MyPageAdapter(getChildFragmentManager());
+        for (int i = 0; i < NUM_PAGES; i++) {
             viewFragments[i] = new MainScreenFragment();
-            viewFragments[i].setFragmentDate(mformat.format(fragmentdate));
+            viewFragments[i].setFragmentDate(getDate(i));
         }
-        mPagerHandler.setAdapter(mPagerAdapter);
-        mPagerHandler.setCurrentItem(MainActivity.current_fragment);
+        mViewPager.setAdapter(mPagerAdapter);
+        mViewPager.setCurrentItem(MainActivity.current_fragment);
+
+        mViewPager.setOnPageChangeListener(
+                new ViewPager.SimpleOnPageChangeListener() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        // When swiping between pages, select the corresponding tab.
+                        getActionBar().setSelectedNavigationItem(position);
+                    }
+                });
+
+        getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        // Create a tab listener that is called when the user changes tabs.
+        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // When the tab is selected, switch to the corresponding page in the ViewPager.
+                mViewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+            }
+
+            @Override
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+            }
+        };
+
+        // Add tabs, specifying the tab's text and TabListener
+        for (int i = 0; i < NUM_PAGES; i++) {
+            boolean selected = i == 2;
+            getActionBar().addTab(
+                    getActionBar().newTab()
+                            .setText(getDayName(i))
+                            .setTabListener(tabListener), selected);
+        }
+
         return rootView;
     }
-    private class myPageAdapter extends FragmentStatePagerAdapter
-    {
+
+    // StatePage changed to just page, check if data auto refreshes, or listener needed
+    private class MyPageAdapter extends FragmentPagerAdapter {
         @Override
-        public Fragment getItem(int i)
-        {
+        public Fragment getItem(int i) {
             return viewFragments[i];
         }
 
         @Override
-        public int getCount()
-        {
+        public int getCount() {
             return NUM_PAGES;
         }
 
-        public myPageAdapter(FragmentManager fm)
-        {
+        public MyPageAdapter(FragmentManager fm) {
             super(fm);
         }
-        // Returns the page title for the top indicator
-        @Override
-        public CharSequence getPageTitle(int position)
-        {
-            return getDayName(getActivity(),System.currentTimeMillis()+((position-2)*86400000));
-        }
-        public String getDayName(Context context, long dateInMillis) {
-            // If the date is today, return the localized version of "Today" instead of the actual
-            // day name.
-
-            Time t = new Time();
-            t.setToNow();
-            int julianDay = Time.getJulianDay(dateInMillis, t.gmtoff);
-            int currentJulianDay = Time.getJulianDay(System.currentTimeMillis(), t.gmtoff);
-            if (julianDay == currentJulianDay) {
-                return context.getString(R.string.today);
-            } else if ( julianDay == currentJulianDay +1 ) {
-                return context.getString(R.string.tomorrow);
-            }
-             else if ( julianDay == currentJulianDay -1)
-            {
-                return context.getString(R.string.yesterday);
-            }
-            else
-            {
-                Time time = new Time();
-                time.setToNow();
-                // Otherwise, the format is just the day of the week (e.g "Wednesday".
-                SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
-                return dayFormat.format(dateInMillis);
-            }
-        }
     }
+
+    public String getDayName(int position) {
+
+        switch (position) {
+
+            case 1:
+                return getContext().getString(R.string.yesterday);
+            case 2:
+                return getContext().getString(R.string.today);
+            case 3:
+                return getContext().getString(R.string.tomorrow);
+            case 0: {
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.DATE, -2);
+                return calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
+            }
+            case 4: {
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.DATE, 2);
+                return calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
+            }
+        }
+
+        return getContext().getString(R.string.Unknown);
+    }
+
+
+    private ActionBar getActionBar() {
+        return ((AppCompatActivity) getActivity()).getSupportActionBar();
+    }
+
+    private String getDate(int i) {
+        Date fragmentdate = new Date(System.currentTimeMillis() + ((i - 2) * 86400000));
+        SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd", getResources().getConfiguration().locale);
+        return mformat.format(fragmentdate);
+    }
+
 }
