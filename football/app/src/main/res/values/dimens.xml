@@ -7,4 +7,8 @@
     <dimen name="TeamNames">17sp</dimen>
     <dimen name="Score">30sp</dimen>
     <dimen name="League">15sp</dimen>
+
+    <!-- Today Widget -->
+    <dimen name="widget_small_default_width">250dp</dimen>
+    <dimen name="widget_small_default_height">110dp</dimen>
 </resources>
