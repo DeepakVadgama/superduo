@@ -1,5 +1,6 @@
 package barqsoft.footballscores;
 
+
 public class Utilies {
     public static final int SERIE_A = 357;
     public static final int PREMIER_LEGAUE = 354;
@@ -50,6 +51,14 @@ public class Utilies {
         }
     }
 
+    public static String getReadableScores(int home_goals, int awaygoals) {
+        if (home_goals < 0 || awaygoals < 0) {
+            return "Match not played out yet";
+        } else {
+            return String.valueOf(home_goals) + " " + String.valueOf(awaygoals);
+        }
+    }
+
     public static int getTeamCrestByTeamName(String teamname) {
         if (teamname == null) {
             return R.drawable.no_icon;
@@ -80,4 +89,5 @@ public class Utilies {
                 return R.drawable.no_icon;
         }
     }
+
 }

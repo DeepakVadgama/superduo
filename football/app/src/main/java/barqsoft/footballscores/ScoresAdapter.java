@@ -48,12 +48,21 @@ public class ScoresAdapter extends CursorAdapter {
         mHolder.date.setText(cursor.getString(COL_MATCHTIME));
         mHolder.score.setText(Utilies.getScores(cursor.getInt(COL_HOME_GOALS), cursor.getInt(COL_AWAY_GOALS)));
         mHolder.match_id = cursor.getDouble(COL_ID);
-
-
         // TODO: Load SVG images from internet later. Its a real pain even with libraries.
-
         mHolder.home_crest.setImageResource(Utilies.getTeamCrestByTeamName(cursor.getString(COL_HOME)));
         mHolder.away_crest.setImageResource(Utilies.getTeamCrestByTeamName(cursor.getString(COL_AWAY)));
+
+
+        // Content descriptions
+        String readableMatchTime = cursor.getString(COL_MATCHTIME);
+        String readableScores = Utilies.getReadableScores(cursor.getInt(COL_HOME_GOALS), cursor.getInt(COL_AWAY_GOALS));
+        mHolder.home_name.setContentDescription(context.getString(R.string.cd_home_team) + cursor.getString(COL_HOME));
+        mHolder.away_name.setContentDescription(context.getString(R.string.cd_away_team) + cursor.getString(COL_AWAY));
+        mHolder.date.setContentDescription(context.getString(R.string.cd_match_time) + readableMatchTime);
+        mHolder.score.setContentDescription(context.getString(R.string.cd_match_score) + readableScores);
+        mHolder.home_crest.setContentDescription(context.getString(R.string.cd_home_crest));
+        mHolder.away_crest.setContentDescription(context.getString(R.string.cd_away_crest));
+
 
         LayoutInflater vi = (LayoutInflater) context.getApplicationContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);

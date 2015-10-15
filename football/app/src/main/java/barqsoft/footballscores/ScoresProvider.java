@@ -14,11 +14,16 @@ public class ScoresProvider extends ContentProvider {
     private static final int MATCHES_WITH_LEAGUE = 101;
     private static final int MATCHES_WITH_ID = 102;
     private static final int MATCHES_WITH_DATE = 103;
-    private UriMatcher muriMatcher = buildUriMatcher();
+    private static final int MATCHES_COMPLETED_WITH_DATE = 104;
+
+    private UriMatcher mUriMatcher = buildUriMatcher();
     private static final SQLiteQueryBuilder ScoreQuery = new SQLiteQueryBuilder();
     private static final String SCORES_BY_LEAGUE = DatabaseContract.scores_table.LEAGUE_COL + " = ?";
     private static final String SCORES_BY_DATE =
             DatabaseContract.scores_table.DATE_COL + " LIKE ?";
+    private static final String SCORES_COMPLETED_BY_DATE =
+            DatabaseContract.scores_table.DATE_COL + " LIKE ? AND " +
+                    DatabaseContract.scores_table.HOME_GOALS_COL + " >= 0 ";
     private static final String SCORES_BY_ID =
             DatabaseContract.scores_table.MATCH_ID + " = ?";
 
@@ -30,6 +35,7 @@ public class ScoresProvider extends ContentProvider {
         matcher.addURI(authority, "league", MATCHES_WITH_LEAGUE);
         matcher.addURI(authority, "id", MATCHES_WITH_ID);
         matcher.addURI(authority, "date", MATCHES_WITH_DATE);
+        matcher.addURI(authority, "completed_date", MATCHES_COMPLETED_WITH_DATE);
         return matcher;
     }
 
@@ -44,6 +50,8 @@ public class ScoresProvider extends ContentProvider {
                 return MATCHES_WITH_ID;
             } else if (link.contentEquals(DatabaseContract.scores_table.buildScoreWithLeague().toString())) {
                 return MATCHES_WITH_LEAGUE;
+            } else if (link.contentEquals(DatabaseContract.scores_table.buildCompletedScoreWithDate().toString())) {
+                return MATCHES_COMPLETED_WITH_DATE;
             }
         }
         return -1;
@@ -62,7 +70,7 @@ public class ScoresProvider extends ContentProvider {
 
     @Override
     public String getType(Uri uri) {
-        final int match = muriMatcher.match(uri);
+        final int match = mUriMatcher.match(uri);
         switch (match) {
             case MATCHES:
                 return DatabaseContract.scores_table.CONTENT_TYPE;
@@ -71,6 +79,8 @@ public class ScoresProvider extends ContentProvider {
             case MATCHES_WITH_ID:
                 return DatabaseContract.scores_table.CONTENT_ITEM_TYPE;
             case MATCHES_WITH_DATE:
+                return DatabaseContract.scores_table.CONTENT_TYPE;
+            case MATCHES_COMPLETED_WITH_DATE:
                 return DatabaseContract.scores_table.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri :" + uri);
@@ -102,6 +112,13 @@ public class ScoresProvider extends ContentProvider {
                         DatabaseContract.SCORES_TABLE,
                         projection, SCORES_BY_DATE, selectionArgs, null, null, sortOrder);
                 break;
+            case MATCHES_COMPLETED_WITH_DATE:
+                //Log.v(FetchScoreTask.LOG_TAG,selectionArgs[1]);
+                //Log.v(FetchScoreTask.LOG_TAG,selectionArgs[2]);
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        DatabaseContract.SCORES_TABLE,
+                        projection, SCORES_COMPLETED_BY_DATE, selectionArgs, null, null, sortOrder);
+                break;
             case MATCHES_WITH_ID:
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         DatabaseContract.SCORES_TABLE,
@@ -129,7 +146,7 @@ public class ScoresProvider extends ContentProvider {
     public int bulkInsert(Uri uri, ContentValues[] values) {
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         //db.delete(DatabaseContract.SCORES_TABLE,null,null);
-        //Log.v(FetchScoreTask.LOG_TAG,String.valueOf(muriMatcher.match(uri)));
+        //Log.v(FetchScoreTask.LOG_TAG,String.valueOf(mUriMatcher.match(uri)));
         switch (match_uri(uri)) {
             case MATCHES:
                 db.beginTransaction();

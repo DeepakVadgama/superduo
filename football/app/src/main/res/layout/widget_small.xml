@@ -11,6 +11,7 @@
         android:background="@color/white"
         android:orientation="horizontal"
         android:padding="4dp"
+        android:visibility="visible"
         >
 
         <LinearLayout
@@ -25,6 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:contentDescription="@string/cd_home_crest"
                 android:src="@drawable/no_icon"/>
 
             <TextView
@@ -34,6 +36,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="Barcelona"
+                android:textColor="@color/black"
                 android:textSize="@dimen/TeamNames"/>
         </LinearLayout>
 
@@ -50,6 +53,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="2"
                 android:gravity="center"
+                android:textColor="@color/black"
                 android:text="1- 0"
                 android:textSize="@dimen/Score"/>
 
@@ -59,6 +63,7 @@
                 android:layout_height="0dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
+                android:textColor="@color/black"
                 android:gravity="center"
                 android:text="Today"/>
 
@@ -75,6 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:contentDescription="@string/cd_away_crest"
                 android:src="@drawable/no_icon"/>
 
             <TextView
@@ -83,9 +89,24 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
+                android:textColor="@color/black"
                 android:text="Manchester United"
                 android:textSize="@dimen/TeamNames"/>
         </LinearLayout>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/nomatch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:padding="4dp"
+        android:text="@string/no_matches_today"
+        android:textSize="@dimen/abc_text_size_medium_material"
+        android:gravity="center"
+        android:visibility="gone">
+    </TextView>
+
 </FrameLayout>

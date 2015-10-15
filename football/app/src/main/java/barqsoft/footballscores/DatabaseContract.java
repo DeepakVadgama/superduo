@@ -38,6 +38,10 @@ public class DatabaseContract {
         public static Uri buildScoreWithDate() {
             return BASE_CONTENT_URI.buildUpon().appendPath("date").build();
         }
+
+        public static Uri buildCompletedScoreWithDate() {
+            return BASE_CONTENT_URI.buildUpon().appendPath("completed_date").build();
+        }
     }
 
     //URI data
