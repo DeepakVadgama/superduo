@@ -94,7 +94,6 @@ public class LatestScoreIntentService extends IntentService {
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
-
     }
 
     private void updateUIOfNoMatches() {

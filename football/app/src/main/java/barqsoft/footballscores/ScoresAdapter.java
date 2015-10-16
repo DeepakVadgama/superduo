@@ -52,13 +52,11 @@ public class ScoresAdapter extends CursorAdapter {
         mHolder.home_crest.setImageResource(Utilies.getTeamCrestByTeamName(cursor.getString(COL_HOME)));
         mHolder.away_crest.setImageResource(Utilies.getTeamCrestByTeamName(cursor.getString(COL_AWAY)));
 
-
         // Content descriptions
-        String readableMatchTime = cursor.getString(COL_MATCHTIME);
         String readableScores = Utilies.getReadableScores(cursor.getInt(COL_HOME_GOALS), cursor.getInt(COL_AWAY_GOALS));
         mHolder.home_name.setContentDescription(context.getString(R.string.cd_home_team) + cursor.getString(COL_HOME));
         mHolder.away_name.setContentDescription(context.getString(R.string.cd_away_team) + cursor.getString(COL_AWAY));
-        mHolder.date.setContentDescription(context.getString(R.string.cd_match_time) + readableMatchTime);
+        mHolder.date.setContentDescription(context.getString(R.string.cd_match_time) + cursor.getString(COL_MATCHTIME));
         mHolder.score.setContentDescription(context.getString(R.string.cd_match_score) + readableScores);
         mHolder.home_crest.setContentDescription(context.getString(R.string.cd_home_crest));
         mHolder.away_crest.setContentDescription(context.getString(R.string.cd_away_crest));
