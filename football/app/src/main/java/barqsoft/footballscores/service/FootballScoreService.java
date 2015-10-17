@@ -125,82 +125,83 @@ public class FootballScoreService extends IntentService {
                 //add leagues here in order to have them be added to the DB.
                 // If you are finding no data in the app, check that this contains all the leagues.
                 // If it doesn't, that can cause an empty DB, bypassing the dummy data routine.
- /*               if (League.equals(PREMIER_LEAGUE) ||
+                if (League.equals(PREMIER_LEAGUE) ||
                         League.equals(SERIE_A) ||
                         League.equals(BUNDESLIGA1) ||
                         League.equals(BUNDESLIGA2) ||
-                        League.equals(PRIMERA_DIVISION)) {*/
+                        League.equals(PRIMERA_DIVISION)) {
 
-                String homeCrestUrl = getCrestImageUrl(match_data.getJSONObject(LINKS).getJSONObject(HOME_TEAM_URL).getString("href"));
-                String awayCrestUrl = getCrestImageUrl(match_data.getJSONObject(LINKS).getJSONObject(AWAY_TEAM_URL).getString("href"));
+//                    String homeCrestUrl = getCrestImageUrl(match_data.getJSONObject(LINKS).getJSONObject(HOME_TEAM_URL).getString("href"));
+//                    String awayCrestUrl = getCrestImageUrl(match_data.getJSONObject(LINKS).getJSONObject(AWAY_TEAM_URL).getString("href"));
 
-                match_id = match_data.getJSONObject(LINKS).getJSONObject(SELF).getString("href");
-                match_id = match_id.replace(MATCH_LINK, "");
-                if (!isReal) {
-                    //This if statement changes the match ID of the dummy data so that it all goes into the database
-                    match_id = match_id + Integer.toString(i);
-                }
+                    String homeCrestUrl = "";
+                    String awayCrestUrl = "";
 
-                mDate = match_data.getString(MATCH_DATE);
-                mTime = mDate.substring(mDate.indexOf("T") + 1, mDate.indexOf("Z"));
-                mDate = mDate.substring(0, mDate.indexOf("T"));
-                SimpleDateFormat match_date = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
-                match_date.setTimeZone(TimeZone.getTimeZone("UTC"));
-                try {
-                    Date parseddate = match_date.parse(mDate + mTime);
-                    SimpleDateFormat new_date = new SimpleDateFormat("yyyy-MM-dd:HH:mm");
-                    new_date.setTimeZone(TimeZone.getDefault());
-                    mDate = new_date.format(parseddate);
-                    mTime = mDate.substring(mDate.indexOf(":") + 1);
-                    mDate = mDate.substring(0, mDate.indexOf(":"));
-
+                    match_id = match_data.getJSONObject(LINKS).getJSONObject(SELF).getString("href");
+                    match_id = match_id.replace(MATCH_LINK, "");
                     if (!isReal) {
-                        //This if statement changes the dummy data's date to match our current date range.
-                        Date fragmentdate = new Date(System.currentTimeMillis() + ((i - 2) * 86400000));
-                        SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
-                        mDate = mformat.format(fragmentdate);
+                        //This if statement changes the match ID of the dummy data so that it all goes into the database
+                        match_id = match_id + Integer.toString(i);
                     }
-                } catch (Exception e) {
-                    Log.d(LOG_TAG, "error here!");
-                    Log.e(LOG_TAG, e.getMessage());
+
+                    mDate = match_data.getString(MATCH_DATE);
+                    mTime = mDate.substring(mDate.indexOf("T") + 1, mDate.indexOf("Z"));
+                    mDate = mDate.substring(0, mDate.indexOf("T"));
+                    SimpleDateFormat match_date = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
+                    match_date.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    try {
+                        Date parseddate = match_date.parse(mDate + mTime);
+                        SimpleDateFormat new_date = new SimpleDateFormat("yyyy-MM-dd:HH:mm");
+                        new_date.setTimeZone(TimeZone.getDefault());
+                        mDate = new_date.format(parseddate);
+                        mTime = mDate.substring(mDate.indexOf(":") + 1);
+                        mDate = mDate.substring(0, mDate.indexOf(":"));
+
+                        if (!isReal) {
+                            //This if statement changes the dummy data's date to match our current date range.
+                            Date fragmentdate = new Date(System.currentTimeMillis() + ((i - 2) * 86400000));
+                            SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
+                            mDate = mformat.format(fragmentdate);
+                        }
+                    } catch (Exception e) {
+                        Log.d(LOG_TAG, "error here!");
+                        Log.e(LOG_TAG, e.getMessage());
+                    }
+                    homeTeam = match_data.getString(HOME_TEAM);
+                    awayTeam = match_data.getString(AWAY_TEAM);
+                    homeTeamGoals = match_data.getJSONObject(RESULT).getString(HOME_GOALS);
+                    awayTeamGoals = match_data.getJSONObject(RESULT).getString(AWAY_GOALS);
+                    match_day = match_data.getString(MATCH_DAY);
+                    ContentValues match_values = new ContentValues();
+                    match_values.put(DatabaseContract.scores_table.MATCH_ID, match_id);
+                    match_values.put(DatabaseContract.scores_table.DATE_COL, mDate);
+                    match_values.put(DatabaseContract.scores_table.TIME_COL, mTime);
+                    match_values.put(DatabaseContract.scores_table.HOME_COL, homeTeam);
+                    match_values.put(DatabaseContract.scores_table.AWAY_COL, awayTeam);
+                    match_values.put(DatabaseContract.scores_table.HOME_GOALS_COL, homeTeamGoals);
+                    match_values.put(DatabaseContract.scores_table.AWAY_GOALS_COL, awayTeamGoals);
+                    match_values.put(DatabaseContract.scores_table.HOME_CREST_URL, homeCrestUrl);
+                    match_values.put(DatabaseContract.scores_table.AWAY_CREST_URL, awayCrestUrl);
+                    match_values.put(DatabaseContract.scores_table.LEAGUE_COL, League);
+                    match_values.put(DatabaseContract.scores_table.MATCH_DAY, match_day);
+
+                    //Log.v(LOG_TAG,match_id);
+                    //Log.v(LOG_TAG,mDate);
+                    //Log.v(LOG_TAG,mTime);
+                    //Log.v(LOG_TAG,homeTeam);
+                    //Log.v(LOG_TAG,awayTeam);
+                    //Log.v(LOG_TAG,homeTeamGoals);
+                    //Log.v(LOG_TAG,awayTeamGoals);
+
+                    values.add(match_values);
                 }
-                homeTeam = match_data.getString(HOME_TEAM);
-                awayTeam = match_data.getString(AWAY_TEAM);
-                homeTeamGoals = match_data.getJSONObject(RESULT).getString(HOME_GOALS);
-                awayTeamGoals = match_data.getJSONObject(RESULT).getString(AWAY_GOALS);
-                match_day = match_data.getString(MATCH_DAY);
-                ContentValues match_values = new ContentValues();
-                match_values.put(DatabaseContract.scores_table.MATCH_ID, match_id);
-                match_values.put(DatabaseContract.scores_table.DATE_COL, mDate);
-                match_values.put(DatabaseContract.scores_table.TIME_COL, mTime);
-                match_values.put(DatabaseContract.scores_table.HOME_COL, homeTeam);
-                match_values.put(DatabaseContract.scores_table.AWAY_COL, awayTeam);
-                match_values.put(DatabaseContract.scores_table.HOME_GOALS_COL, homeTeamGoals);
-                match_values.put(DatabaseContract.scores_table.AWAY_GOALS_COL, awayTeamGoals);
-                match_values.put(DatabaseContract.scores_table.HOME_CREST_URL, homeCrestUrl);
-                match_values.put(DatabaseContract.scores_table.AWAY_CREST_URL, awayCrestUrl);
-                match_values.put(DatabaseContract.scores_table.LEAGUE_COL, League);
-                match_values.put(DatabaseContract.scores_table.MATCH_DAY, match_day);
-                //log spam
-
-                //Log.v(LOG_TAG,match_id);
-                //Log.v(LOG_TAG,mDate);
-                //Log.v(LOG_TAG,mTime);
-                //Log.v(LOG_TAG,homeTeam);
-                //Log.v(LOG_TAG,awayTeam);
-                //Log.v(LOG_TAG,homeTeamGoals);
-                //Log.v(LOG_TAG,awayTeamGoals);
-
-                values.add(match_values);
             }
-//            }
             int inserted_data = 0;
             ContentValues[] insert_data = new ContentValues[values.size()];
             values.toArray(insert_data);
-            inserted_data = mContext.getContentResolver().bulkInsert(
-                    DatabaseContract.BASE_CONTENT_URI, insert_data);
+            inserted_data = mContext.getContentResolver().bulkInsert(DatabaseContract.BASE_CONTENT_URI, insert_data);
+            Log.v(LOG_TAG, "Succesfully Inserted : " + String.valueOf(inserted_data));
 
-            //Log.v(LOG_TAG,"Succesfully Inserted : " + String.valueOf(inserted_data));
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage());
         }

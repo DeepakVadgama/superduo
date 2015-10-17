@@ -53,8 +53,8 @@
                 android:layout_gravity="center"
                 android:layout_weight="2"
                 android:gravity="center"
-                android:textColor="@color/black"
                 android:text="1- 0"
+                android:textColor="@color/black"
                 android:textSize="@dimen/Score"/>
 
             <TextView
@@ -63,9 +63,9 @@
                 android:layout_height="0dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:textColor="@color/black"
                 android:gravity="center"
-                android:text="Today"/>
+                android:text="Today"
+                android:textColor="@color/black"/>
 
         </LinearLayout>
 
@@ -89,8 +89,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:textColor="@color/black"
                 android:text="Manchester United"
+                android:textColor="@color/black"
                 android:textSize="@dimen/TeamNames"/>
         </LinearLayout>
 
@@ -101,12 +101,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
+        android:gravity="center"
         android:orientation="horizontal"
         android:padding="4dp"
         android:text="@string/no_matches_today"
+        android:textColor="@color/black"
         android:textSize="@dimen/abc_text_size_medium_material"
-        android:gravity="center"
-        android:visibility="gone">
+        android:visibility="visible">
     </TextView>
 
 </FrameLayout>

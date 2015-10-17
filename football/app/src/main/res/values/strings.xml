@@ -44,6 +44,6 @@
     <string name="cd_match_score">Score </string>
     <string name="cd_home_crest">Home team crest image </string>
     <string name="cd_away_crest">Away team crest image </string>
-    <string name="no_matches_today">Matches not completed yet or not being played today</string>
+    <string name="no_matches_today">Football scores not available. Matches not scheduled or not completed yet.</string>
     <string name="unknown_time">not found</string>
 </resources>

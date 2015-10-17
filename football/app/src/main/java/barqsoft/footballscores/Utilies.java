@@ -86,7 +86,7 @@ public class Utilies {
             case "Stoke City FC":
                 return R.drawable.stoke_city;
             default:
-                return R.drawable.no_icon;
+                return R.drawable.ic_icon;
         }
     }
 
