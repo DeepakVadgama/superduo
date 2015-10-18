@@ -46,4 +46,15 @@
     <string name="cd_away_crest">Away team crest image </string>
     <string name="no_matches_today">Football scores not available. Matches not scheduled or not completed yet.</string>
     <string name="unknown_time">not found</string>
+    <string name="cd_share_button">Share</string>
+    <string name="serie_a">Seria A</string>
+    <string name="premier_league">Premier League</string>
+    <string name="uefa_league">UEFA Champions League</string>
+    <string name="primera_division">Primera Division</string>
+    <string name="league_unknown">Not known League Please report</string>
+    <string name="group_day6">Group Stages, Matchday : 6</string>
+    <string name="first_round">First Knockout round</string>
+    <string name="quarterfinal">QuarterFinal</string>
+    <string name="semifinal">SemiFinal</string>
+    <string name="final_str">Final</string>
 </resources>

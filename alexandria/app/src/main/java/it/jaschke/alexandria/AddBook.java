@@ -181,9 +181,14 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         holder.bookSubTitle.setText(bookSubTitle);
 
         String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR));
-        String[] authorsArr = authors.split(",");
-        holder.authors.setLines(authorsArr.length);
-        holder.authors.setText(authors.replace(",", "\n"));
+        if (authors == null) {
+            holder.authors.setLines(1);
+            holder.authors.setText(getString(R.string.author_unknown));
+        } else {
+            String[] authorsArr = authors.split(",");
+            holder.authors.setLines(authorsArr.length);
+            holder.authors.setText(authors.replace(",", "\n"));
+        }
         String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
         if (Patterns.WEB_URL.matcher(imgUrl).matches()) {
             // Fixed: Same image is used in 3 places, use Picasso library to take advantage of caching

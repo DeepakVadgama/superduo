@@ -30,4 +30,6 @@
     The original version of this app was built by Sascha Jaschke, and a modified version is given to students in the Udacity Android Nanodegree program. </string>
     <string name="scanner_activity">Scan book</string>
     <string name="not_found_msg">Book not found</string>
+    <string name="author_unknown">Author unknown</string>
+    <string name="cd_delete_book">Delete book</string>
 </resources>
